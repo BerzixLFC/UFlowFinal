@@ -19,6 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "UflowApp"
+rootProject.name = "UFlow"
 include(":app")
- 
