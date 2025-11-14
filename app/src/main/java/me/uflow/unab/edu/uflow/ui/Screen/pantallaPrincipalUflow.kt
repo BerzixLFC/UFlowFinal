@@ -1,4 +1,4 @@
-package me.uflow.unab.edu.uflow.ui.screens
+package me.uflow.unab.edu.uflow.ui.Screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
@@ -7,6 +7,7 @@ import me.uflow.unab.edu.uflow.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -62,7 +63,7 @@ fun PantallaMaquetacionInicioInlineTotal(
                 onClick = onNavigateToLogin,
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3D4791)),
                 shape = MaterialTheme.shapes.medium.copy(
-                    all = androidx.compose.foundation.shape.CornerSize(13.dp)
+                    all = CornerSize(13.dp)
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -85,7 +86,7 @@ fun PantallaMaquetacionInicioInlineTotal(
                     width = 2.dp,
                 ),
                 shape = MaterialTheme.shapes.medium.copy(
-                    all = androidx.compose.foundation.shape.CornerSize(13.dp)
+                    all = CornerSize(13.dp)
                 ),
                 colors = ButtonDefaults.outlinedButtonColors(
                     contentColor = Color(0xFF3D4791),

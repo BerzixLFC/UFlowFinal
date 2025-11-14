@@ -1,4 +1,4 @@
-package me.uflow.unab.edu.uflow.ui.screens
+package me.uflow.unab.edu.uflow.ui.Screen
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -24,6 +24,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -423,7 +424,7 @@ private fun PasswordField(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DateDropDowns(fontSize: androidx.compose.ui.unit.TextUnit, cornerRadius: Dp) {
+private fun DateDropDowns(fontSize: TextUnit, cornerRadius: Dp) {
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
     val years = (currentYear downTo 1900).map { it.toString() }
     val months = (1..12).map { "%02d".format(it) }
@@ -476,7 +477,7 @@ private fun DropdownField(
     label: String,
     modifier: Modifier,
     cornerRadius: Dp,
-    fontSize: androidx.compose.ui.unit.TextUnit
+    fontSize: TextUnit
 ) {
     var expanded by remember { mutableStateOf(false) }
     val displayText = if (selected == label) label else selected

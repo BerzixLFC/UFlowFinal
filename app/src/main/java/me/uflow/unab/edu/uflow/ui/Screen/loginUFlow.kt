@@ -1,4 +1,4 @@
-package me.uflow.unab.edu.uflow.ui.screens
+package me.uflow.unab.edu.uflow.ui.Screen
 
 import android.app.Activity
 import android.util.Log
@@ -20,6 +20,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -325,7 +326,7 @@ fun PantallaLoginCompleta(
             enabled = !authState.isLoading,
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3D4791)),
             shape = MaterialTheme.shapes.medium.copy(
-                all = androidx.compose.foundation.shape.CornerSize(
+                all = CornerSize(
                     13.dp
                 )
             ),

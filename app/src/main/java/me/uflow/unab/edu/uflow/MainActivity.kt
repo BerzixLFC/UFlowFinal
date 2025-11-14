@@ -32,33 +32,34 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import me.uflow.unab.edu.uflow.ui.viewmodel.AuthViewModel
 import me.uflow.unab.edu.uflow.viewmodel.ChatViewModel
-import me.uflow.unab.edu.uflow.ui.Screen.AmigosScreen
-import me.uflow.unab.edu.uflow.ui.screens.Calendario
-import me.uflow.unab.edu.uflow.ui.Screen. PantallaAsistencia
-import me.uflow.unab.edu.uflow.ui.screens.PantallaChatDirecto
-import me.uflow.unab.edu.uflow.ui.screens.PantallaDetalleCurso
-import me.uflow.unab.edu.uflow.ui.screens.PantallaLeccionActiva
-import me.uflow.unab.edu.uflow.ui.screens.PantallaLoginCompleta
-import me.uflow.unab.edu.uflow.ui.screens.PantallaMaquetacionInicioInlineTotal
-import me.uflow.unab.edu.uflow.ui.screens.PantallaMenuPrincipal
-import me.uflow.unab.edu.uflow.ui.Screen.PantallaPerfil
-import me.uflow.unab.edu.uflow.ui.Screen.PantallaPerfilAmigo
-import me.uflow.unab.edu.uflow.ui.screens.PantallaCursosCompletados
-import me.uflow.unab.edu.uflow.ui.screens.PantallaEditarConexiones
-import me.uflow.unab.edu.uflow.ui.screens.PantallaEditarInformacion
-import me.uflow.unab.edu.uflow.ui.screens.PantallaEditarIntereses
-import me.uflow.unab.edu.uflow.ui.screens.PantallaRegistroUflowHardcode
-import me.uflow.unab.edu.uflow.ui.screens.PantallaSeleccionDificultad
-import me.uflow.unab.edu.uflow.ui.screens.PantallaSeleccionLenguaje
-import me.uflow.unab.edu.uflow.util.Lenguaje
-import me.uflow.unab.edu.uflow.ui.Screen.ChallengeApp
 import me.uflow.unab.edu.uflow.viewmodel.QuizViewModel
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import me.uflow.unab.edu.uflow.ui.Screen.AmigosScreen
+import me.uflow.unab.edu.uflow.ui.Screen.Calendario
+import me.uflow.unab.edu.uflow.ui.Screen.ChallengeApp
+import me.uflow.unab.edu.uflow.ui.Screen.PantallaAsistencia
+import me.uflow.unab.edu.uflow.ui.Screen.PantallaDetalleCurso
+import me.uflow.unab.edu.uflow.ui.Screen.PantallaLoginCompleta
+import me.uflow.unab.edu.uflow.ui.Screen.PantallaMaquetacionInicioInlineTotal
+import me.uflow.unab.edu.uflow.ui.Screen.PantallaMenuPrincipal
+import me.uflow.unab.edu.uflow.ui.Screen.PantallaPerfil
+import me.uflow.unab.edu.uflow.ui.Screen.PantallaPerfilAmigo
+import me.uflow.unab.edu.uflow.ui.Screen.PantallaRegistroUflowHardcode
 import me.uflow.unab.edu.uflow.ui.Screen.PomodoroScreen
+import me.uflow.unab.edu.uflow.ui.screens.PantallaChatDirecto
+import me.uflow.unab.edu.uflow.ui.screens.PantallaCursosCompletados
+import me.uflow.unab.edu.uflow.ui.screens.PantallaEditarConexiones
+import me.uflow.unab.edu.uflow.ui.screens.PantallaEditarInformacion
+import me.uflow.unab.edu.uflow.ui.screens.PantallaEditarIntereses
+import me.uflow.unab.edu.uflow.ui.screens.PantallaLeccionActiva
+import me.uflow.unab.edu.uflow.ui.screens.PantallaSeleccionDificultad
+import me.uflow.unab.edu.uflow.ui.screens.PantallaSeleccionLenguaje
+import me.uflow.unab.edu.uflow.util.Lenguaje
+
 class MainActivity : ComponentActivity() {
     
     private val requestPermissionLauncher = registerForActivityResult(

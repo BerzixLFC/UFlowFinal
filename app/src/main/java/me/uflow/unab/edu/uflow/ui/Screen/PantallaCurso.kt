@@ -1,4 +1,4 @@
-package me.uflow.unab.edu.uflow.ui.screens
+package me.uflow.unab.edu.uflow.ui.Screen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
