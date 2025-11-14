@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "411342120167",
+    "project_id": "uflow-7dea3",
+    "storage_bucket": "uflow-7dea3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:411342120167:android:b282de1149191fec0d6e42",
+        "android_client_info": {
+          "package_name": "me.uflow.unab.edu.uflow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaE2Ufwgo7IN7GJJajKcHVpmpAoT7IfkA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
