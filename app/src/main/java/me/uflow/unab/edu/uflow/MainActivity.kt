@@ -100,6 +100,8 @@ fun AppNavigation() {
     val authViewModel: AuthViewModel = viewModel()
     val chatViewModel: ChatViewModel = viewModel()
     val quizViewModel: QuizViewModel = viewModel()
+    val eventoViewModel: EventoViewModel = viewModel()
+
 
     val authState by authViewModel.uiState.collectAsState()
 
@@ -191,7 +193,8 @@ fun AppNavigation() {
             composable("calendario") {
                 Calendario(
                     navController= navController,
-                    onBack = { navController.popBackStack() }
+                    onBack = { navController.popBackStack() },
+                    eventoViewModel = eventoViewModel
                 )
             }
             composable("amigos") {
@@ -342,7 +345,7 @@ fun AppNavigation() {
                     onBack = { navController.popBackStack() },
                     initialDate = date,
                     onSaveTask = { title, details, subject ->
-                        taskViewModel.addTask(title, details, subject, date)
+                        eventoViewModel.addTask(title, details, subject, date)
                         navController.popBackStack()
                     }
                 )

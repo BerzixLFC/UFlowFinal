@@ -1,6 +1,6 @@
 package me.uflow.unab.edu.uflow.ui.Screen
 
-// En app/src/main/java/me/uflow/unab/edu/uflow/ui/Screen/PantallaEditarEvento.kt
+// En app/src/main/java/me/uflow/unab/edu/uflow/ui/Screen/PantallaCrearTarea.kt
 
 
 import androidx.compose.foundation.layout.*
@@ -20,7 +20,7 @@ import java.time.LocalDate
 @Composable
 fun TaskDetailScreen(
     onBack: () -> Unit,
-    onSaveTask: (title: String, details: String, subject: String) -> Unit,
+    onSaveTask: (String, String, String) -> Unit,
     initialDate: LocalDate // Capturar el día para el que se crea la tarea
 ) {
     var title by remember { mutableStateOf("") }
