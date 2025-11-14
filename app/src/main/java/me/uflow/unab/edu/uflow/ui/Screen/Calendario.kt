@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import me.uflow.unab.edu.uflow.ui.components.TaskCard
 import java.time.LocalDate
 import java.time.YearMonth
@@ -53,6 +54,7 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Calendario(
+    navController: NavController,
     onBack: () -> Unit = {}
 ) {
     // --- ESTADOS DEL CALENDARIO ---
@@ -83,7 +85,10 @@ fun Calendario(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Button(
-                        onClick = {},
+                        onClick = {
+                            val dateToPass = selectedDate ?: LocalDate.now()
+                            navController.navigate("taskDetail/${dateToPass.toString()}")
+                        },
                         shape = RoundedCornerShape(10.dp),
                         elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFAFAFA)),

@@ -50,6 +50,7 @@ import me.uflow.unab.edu.uflow.ui.Screen.PantallaPerfil
 import me.uflow.unab.edu.uflow.ui.Screen.PantallaPerfilAmigo
 import me.uflow.unab.edu.uflow.ui.Screen.PantallaRegistroUflowHardcode
 import me.uflow.unab.edu.uflow.ui.Screen.PomodoroScreen
+import me.uflow.unab.edu.uflow.ui.Screen.TaskDetailScreen
 import me.uflow.unab.edu.uflow.ui.screens.PantallaChatDirecto
 import me.uflow.unab.edu.uflow.ui.screens.PantallaCursosCompletados
 import me.uflow.unab.edu.uflow.ui.screens.PantallaEditarConexiones
@@ -59,6 +60,8 @@ import me.uflow.unab.edu.uflow.ui.screens.PantallaLeccionActiva
 import me.uflow.unab.edu.uflow.ui.screens.PantallaSeleccionDificultad
 import me.uflow.unab.edu.uflow.ui.screens.PantallaSeleccionLenguaje
 import me.uflow.unab.edu.uflow.util.Lenguaje
+import me.uflow.unab.edu.uflow.viewmodel.EventoViewModel
+import java.time.LocalDate
 
 class MainActivity : ComponentActivity() {
     
@@ -187,6 +190,7 @@ fun AppNavigation() {
             }
             composable("calendario") {
                 Calendario(
+                    navController= navController,
                     onBack = { navController.popBackStack() }
                 )
             }
@@ -329,6 +333,21 @@ fun AppNavigation() {
                     }
                 }
             }
+            // En tu NavHost
+            composable("taskDetail/{date}") { backStackEntry ->
+                val dateStr = backStackEntry.arguments?.getString("date") ?: LocalDate.now().toString()
+                val date = LocalDate.parse(dateStr)
+                val taskViewModel: EventoViewModel = viewModel()
+                TaskDetailScreen(
+                    onBack = { navController.popBackStack() },
+                    initialDate = date,
+                    onSaveTask = { title, details, subject ->
+                        taskViewModel.addTask(title, details, subject, date)
+                        navController.popBackStack()
+                    }
+                )
+            }
+
         }
     }
 }
