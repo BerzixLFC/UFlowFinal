@@ -47,6 +47,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController // <-- 1. IMPORT NECESARIO
 import me.uflow.unab.edu.uflow.R
+import me.uflow.unab.edu.uflow.Util.NotificationHelper
+
 
 
 // Colores del diseño
@@ -76,6 +78,7 @@ class PomodoroViewModel(private val context: Context) : ViewModel() {
     val state: StateFlow<PomodoroState> = _state.asStateFlow()
 
     private var timerJob: Job? = null
+    private val notificationHelper = NotificationHelper(context)
 
     fun toggleTimer() {
         if (_state.value.isRunning) {
@@ -87,6 +90,8 @@ class PomodoroViewModel(private val context: Context) : ViewModel() {
 
     private fun onTimerComplete() {
         val currentState = _state.value
+
+        notificationHelper.showTimerCompleteNotification(currentState.sessionType)
 
         when (currentState.sessionType) {
             SessionType.WORK -> {
@@ -226,7 +231,6 @@ class PomodoroViewModel(private val context: Context) : ViewModel() {
 fun PomodoroScreen(navController: NavController) {
     val context = LocalContext.current
 
-    // ⭐ Crear el ViewModel manualmente
     val viewModel = remember {
         PomodoroViewModel(context.applicationContext)
     }

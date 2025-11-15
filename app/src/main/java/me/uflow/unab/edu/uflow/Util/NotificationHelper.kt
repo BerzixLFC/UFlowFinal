@@ -1,6 +1,7 @@
-package me.uflow.unab.edu.uflow.ui.Screen
+package me.uflow.unab.edu.uflow.Util
 
 import android.Manifest
+import android.R
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -10,7 +11,10 @@ import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import me.uflow.unab.edu.uflow.MainActivity 
+import me.uflow.unab.edu.uflow.MainActivity
+import me.uflow.unab.edu.uflow.ui.Screen.PomodoroApplication
+import me.uflow.unab.edu.uflow.ui.Screen.SessionType
+
 
 class NotificationHelper(private val context: Context) {
 
@@ -48,8 +52,8 @@ class NotificationHelper(private val context: Context) {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val notification = NotificationCompat.Builder(context, PomodoroApplication.CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
+        val notification = NotificationCompat.Builder(context, PomodoroApplication.Companion.CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_dialog_info)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
