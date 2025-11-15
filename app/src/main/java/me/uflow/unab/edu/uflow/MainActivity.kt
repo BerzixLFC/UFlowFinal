@@ -61,6 +61,7 @@ import me.uflow.unab.edu.uflow.ui.screens.PantallaSeleccionDificultad
 import me.uflow.unab.edu.uflow.ui.screens.PantallaSeleccionLenguaje
 import me.uflow.unab.edu.uflow.util.Lenguaje
 import me.uflow.unab.edu.uflow.viewmodel.EventoViewModel
+import me.uflow.unab.edu.uflow.viewmodel.TaskViewModel
 import java.time.LocalDate
 
 class MainActivity : ComponentActivity() {
@@ -100,7 +101,7 @@ fun AppNavigation() {
     val authViewModel: AuthViewModel = viewModel()
     val chatViewModel: ChatViewModel = viewModel()
     val quizViewModel: QuizViewModel = viewModel()
-    val eventoViewModel: EventoViewModel = viewModel()
+    val taskViewModel: TaskViewModel = viewModel()
 
 
     val authState by authViewModel.uiState.collectAsState()
@@ -194,7 +195,7 @@ fun AppNavigation() {
                 Calendario(
                     navController= navController,
                     onBack = { navController.popBackStack() },
-                    eventoViewModel = eventoViewModel
+                    taskViewModel = taskViewModel,
                 )
             }
             composable("amigos") {
@@ -345,7 +346,7 @@ fun AppNavigation() {
                     onBack = { navController.popBackStack() },
                     initialDate = date,
                     onSaveTask = { title, details, subject ->
-                        eventoViewModel.addTask(title, details, subject, date)
+                        taskViewModel.addTask(title, details, subject, date)
                         navController.popBackStack()
                     }
                 )

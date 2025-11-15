@@ -20,29 +20,22 @@ class TaskViewModel : ViewModel() {
     private val db = Firebase.firestore
     private val auth = Firebase.auth
 
-    // Este StateFlow mantendrá la lista de tareas para el día seleccionado.
-    // La UI "escuchará" los cambios en esta variable.
+    // Este StateFlow mantiene la lista de tareas para el día seleccionado.
+    // La UI escucha los cambios en esta variable.
     private val _tasks = MutableStateFlow<List<Task>>(emptyList<Task>())
     val tasks: StateFlow<List<Task>> = _tasks.asStateFlow()
 
-    /**
-     * Carga las tareas de un día específico desde Firestore para el usuario actual.
-     * Utiliza un SnapshotListener para recibir actualizaciones en tiempo real.
-     * @param date El día del cual se quieren cargar las tareas.
-     */
     fun loadTasksForDate(date: LocalDate) {
         viewModelScope.launch {
             val userId = auth.currentUser?.uid ?: return@launch
-
-            // Convertimos el inicio y fin del día a Timestamps de Firebase para poder filtrar.
             val startOfDay = Timestamp(date.atStartOfDay(ZoneId.systemDefault()).toInstant())
             val endOfDay = Timestamp(date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant())
 
             // Creamos una consulta a Firestore que se actualiza en tiempo real.
             db.collection("tasks")
-                .whereEqualTo("userId", userId) // Filtra solo las tareas del usuario actual.
-                .whereGreaterThanOrEqualTo("date", startOfDay) // Tareas desde el inicio del día...
-                .whereLessThan("date", endOfDay) // ...hasta antes del inicio del día siguiente.
+                .whereEqualTo("userId", userId)
+                .whereGreaterThanOrEqualTo("date", startOfDay)
+                .whereLessThan("date", endOfDay)
                 .addSnapshotListener { snapshots, error ->
                     if (error != null) {
                         // Si hay un error, lo ideal sería registrarlo o mostrar un mensaje.

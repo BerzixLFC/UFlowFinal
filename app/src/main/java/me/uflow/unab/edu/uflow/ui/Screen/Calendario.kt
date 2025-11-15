@@ -1,6 +1,5 @@
 package me.uflow.unab.edu.uflow.ui.Screen
 
-import android.R.attr.id
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,10 +15,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -34,9 +33,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,22 +53,35 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import me.uflow.unab.edu.uflow.R
 import me.uflow.unab.edu.uflow.ui.components.TaskCard
-import me.uflow.unab.edu.uflow.viewmodel.EventoViewModel
+import me.uflow.unab.edu.uflow.viewmodel.TaskViewModel
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
+
+// Se mantiene el Saver para LocalDate
+val LocalDateSaver = Saver<LocalDate, String>(
+    save = { it.toString() },
+    restore = { LocalDate.parse(it) }
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Calendario(
     navController: NavController,
     onBack: () -> Unit = {},
-    eventoViewModel: EventoViewModel
+    taskViewModel: TaskViewModel
 ) {
-    // --- ESTADOS DEL CALENDARIO ---
     var currentMonth by remember { mutableStateOf(YearMonth.now()) }
-    var selectedDate by remember { mutableStateOf<LocalDate?>(LocalDate.now()) }
+    var selectedDate by rememberSaveable(stateSaver = LocalDateSaver) { mutableStateOf(LocalDate.now()) }
+    val tasksForDay by taskViewModel.tasks.collectAsState()
+
+    // Este LaunchedEffect es sensible a cambios en selectedDate.
+    // Si la UI es estable, solo se ejecutará cuando DEBE.
+    LaunchedEffect(selectedDate) {
+        println("LaunchedEffect disparado para la fecha: $selectedDate")
+        taskViewModel.loadTasksForDate(selectedDate)
+    }
 
     Scaffold(
         topBar = {
@@ -86,40 +102,42 @@ fun Calendario(
         bottomBar = {
             Surface(shadowElevation = 8.dp) {
                 Row(
-                    modifier = Modifier.Companion
+                    // MODIFICADO: Se elimina .Companion
+                    modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 12.dp),
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically // Añadido para mejor alineación
                 ) {
                     Button(
                         onClick = {
-                            val dateToPass = selectedDate ?: LocalDate.now()
-                            navController.navigate("taskDetail/${dateToPass.toString()}")
+                            navController.navigate("taskDetail/${selectedDate.toString()}")
                         },
                         shape = RoundedCornerShape(10.dp),
                         elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFAFAFA)),
                         contentPadding = PaddingValues(horizontal = 32.dp, vertical = 8.dp)
-
                     ) {
                         Text(
                             text = "Crear una tarea",
                             fontSize = 28.sp,
-                            fontWeight = FontWeight.Companion.Bold,
+                            // MODIFICADO: Se elimina .Companion
+                            fontWeight = FontWeight.Bold,
                             color = Color(0xFF484848)
                         )
                     }
+                    Spacer(Modifier.size(16.dp)) // Añadido para separar los botones
                     IconButton(
                         onClick = { /* TODO: Navegar a la IA */ },
-                        // Lo alineamos a la derecha y centrado verticalmente
-                        modifier = Modifier.Companion
-                            //.align(Alignment.CenterEnd as Alignment.Vertical) // Esta línea daba error de casteo
+                        // MODIFICADO: Se elimina .Companion
+                        modifier = Modifier
                             .background(Color(0xFF0B5696), shape = CircleShape)
                     ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForward, // Ícono de "magia" o IA
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                             contentDescription = "Ir a la IA",
-                            tint = Color.Companion.White
+                            // MODIFICADO: Se elimina .Companion
+                            tint = Color.White
                         )
                     }
                 }
@@ -127,20 +145,18 @@ fun Calendario(
         }
     ) { paddingValues ->
         Column(
-            modifier = Modifier.Companion
+            // MODIFICADO: Se elimina .Companion de todos los Modifiers
+            modifier = Modifier
                 .padding(paddingValues)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.Companion.CenterHorizontally
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            // --- CALENDARIO ---
             CalendarHeader(
                 currentMonth = currentMonth,
                 onPrevMonth = { currentMonth = currentMonth.minusMonths(1) },
                 onNextMonth = { currentMonth = currentMonth.plusMonths(1) }
             )
-            Spacer(modifier = Modifier.Companion.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             CalendarGrid(
                 currentMonth = currentMonth,
                 selectedDate = selectedDate,
@@ -148,32 +164,50 @@ fun Calendario(
                     selectedDate = date
                 }
             )
-
             HorizontalDivider(
-                modifier = Modifier.Companion.padding(horizontal = 16.dp, vertical = 24.dp),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
                 thickness = 1.dp,
-                color = Color.Companion.LightGray
+                color = Color.LightGray
             )
-
-            // --- SECCIÓN DE TAREAS (AHORA ES DINÁMICA) ---
             Text(
                 text = when (selectedDate) {
                     LocalDate.now().minusDays(1) -> "Tareas de Ayer"
                     LocalDate.now() -> "Tareas de Hoy"
                     LocalDate.now().plusDays(1) -> "Tareas de Mañana"
-                    else -> "Tareas para ${selectedDate?.dayOfMonth}/${selectedDate?.monthValue}"
+                    else -> "Tareas para ${selectedDate.dayOfMonth}/${selectedDate.monthValue}"
                 },
                 fontSize = 24.sp,
-                fontWeight = FontWeight.Companion.Bold,
+                fontWeight = FontWeight.Bold,
                 color = Color(0xFF0B5696)
             )
 
-            // Aquí mostrarías la lista de tareas filtrada por 'selectedDate'
-            // Por ahora, dejamos una como ejemplo para mostrar cómo se vería
-            TaskCard(
-                title = "Tarea para el día seleccionado",
-                onClick = {}
-            )
+            // La lógica para mostrar tareas o el texto vacío ya era correcta.
+            if (tasksForDay.isEmpty()) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "No tienes tareas para este día.",
+                    modifier = Modifier.padding(16.dp),
+                    color = Color.Gray
+                )
+            } else {
+                LazyColumn (
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(top = 16.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp)
+                ) {
+                    items(tasksForDay) { task ->
+                        TaskCard(
+                            title = task.title,
+                            onClick = {
+                                // Navegamos con el ID del documento, que es más seguro.
+                                navController.navigate("taskDetail/${task.id}")
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                }
+            }
         }
     }
 }
@@ -185,10 +219,11 @@ fun CalendarHeader(
     onNextMonth: () -> Unit
 ) {
     Row(
-        modifier = Modifier.Companion
+        // MODIFICADO: Se elimina .Companion
+        modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.Companion.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         IconButton(onClick = onPrevMonth) {
@@ -203,7 +238,7 @@ fun CalendarHeader(
             } ${currentMonth.year}"
                 .replaceFirstChar { it.uppercase() },
             fontSize = 22.sp,
-            fontWeight = FontWeight.Companion.Bold
+            fontWeight = FontWeight.Bold
         )
         IconButton(onClick = onNextMonth) {
             Icon(Icons.AutoMirrored.Filled.ArrowForward, "Mes siguiente")
@@ -214,34 +249,31 @@ fun CalendarHeader(
 @Composable
 fun CalendarGrid(
     currentMonth: YearMonth,
-    selectedDate: LocalDate?,
+    selectedDate: LocalDate,
     onDateSelected: (LocalDate) -> Unit
 ) {
     val daysInMonth = currentMonth.lengthOfMonth()
-    // Ajuste para que Lunes sea el primer día (0) y Domingo el último (6)
     val firstDayOfMonth = currentMonth.atDay(1).dayOfWeek.value % 7
     val daysOfWeek = listOf("L", "M", "X", "J", "V", "S", "D")
 
-    Column(modifier = Modifier.Companion.padding(horizontal = 16.dp)) {
-        // Encabezados de los días de la semana (L, M, X...)
-        Row(modifier = Modifier.Companion.fillMaxWidth()) {
+    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        Row(modifier = Modifier.fillMaxWidth()) {
             daysOfWeek.forEach { day ->
                 Text(
                     text = day,
-                    modifier = Modifier.Companion.weight(1f),
-                    textAlign = TextAlign.Companion.Center,
-                    fontWeight = FontWeight.Companion.Bold
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
-        Spacer(modifier = Modifier.Companion.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        // Genera las filas de días
         val totalCells = (daysInMonth + firstDayOfMonth)
         val numRows = (totalCells + 6) / 7
 
         for (row in 0 until numRows) {
-            Row(modifier = Modifier.Companion.fillMaxWidth()) {
+            Row(modifier = Modifier.fillMaxWidth()) {
                 for (col in 0 until 7) {
                     val index = row * 7 + col
                     if (index >= firstDayOfMonth && index < totalCells) {
@@ -253,8 +285,7 @@ fun CalendarGrid(
                             onClick = { onDateSelected(date) }
                         )
                     } else {
-                        // Celdas vacías para rellenar
-                        Spacer(modifier = Modifier.Companion.weight(1f))
+                        Spacer(modifier = Modifier.weight(1f))
                     }
                 }
             }
@@ -270,30 +301,31 @@ fun RowScope.DayCell(
 ) {
     val isToday = date == LocalDate.now()
     val backgroundColor = when {
-        isSelected -> Color(0xFF0B5696) // Azul para el seleccionado
-        isToday -> Color(0xFFD3E6F8)      // Azul claro para hoy
-        else -> Color.Companion.Transparent
+        isSelected -> Color(0xFF0B5696)
+        isToday -> Color(0xFFD3E6F8)
+        else -> Color.Transparent
     }
     val textColor = when {
-        isSelected -> Color.Companion.White
+        isSelected -> Color.White
         isToday -> Color(0xFF0B5696)
-        else -> Color.Companion.Black
+        else -> Color.Black
     }
 
     Box(
-        modifier = Modifier.Companion
+        modifier = Modifier
             .weight(1f)
-            .aspectRatio(1f) // Hace que la celda sea cuadrada
+            .aspectRatio(1f)
             .padding(2.dp)
             .clip(CircleShape)
             .background(backgroundColor)
             .clickable(onClick = onClick),
-        contentAlignment = Alignment.Companion.Center
+        contentAlignment = Alignment.Center
     ) {
         Text(
             text = date.dayOfMonth.toString(),
             color = textColor,
-            fontWeight = if (isSelected || isToday) FontWeight.Companion.Bold else FontWeight.Companion.Normal
+            fontWeight = if (isSelected || isToday) FontWeight.Bold else FontWeight.Normal
         )
     }
 }
+
